@@ -752,7 +752,7 @@ def upload_to_notary(build_info, options):
     except ExpatError:
         print("notarytool: " + proc_stderr, file=sys.stderr)
         raise MunkiPkgError("Notarization upload failed.")
-
+    display("notarytool: received '{}'".format(output), options.quiet)
     try:
         request_id = output['id']
         display("id " + request_id, options.quiet, "notarytool")
@@ -789,13 +789,12 @@ def get_notarization_state(request_id, build_info, options):
     except ExpatError:
         print(proc_stderr, file=sys.stderr)
         raise MunkiPkgError("Notarization check failed.")
+    display("notarytool: received '{}'".format(output), options.quiet)
     if 'message' not in output:
         print("notarytool: " + output.get('success-message', 'Unexpected response'))
         print("notarytool: DEBUG output follows")
-        print(output)
         state['status'] = 'Unknown'
     else:
-        print(output)
         state['id'] = output.get('id', '')
         state['status'] = output.get('status', 'Unknown')
         state['message'] = output.get('message', '')
